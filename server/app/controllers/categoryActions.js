@@ -1,35 +1,39 @@
+const tables = require("../../database/tables");
+
 // Some data to make the trick
 
 const categories = [
-    {
-      id: 1,
-      name: "Science-Fiction",
-    },
-    {
-      id: 2,
-      name: "Comédie",
-    },
-  ];
-  const browse = (req, res) => {
-    res.json( categories);
-  };
+  {
+    id: 1,
+    name: "Science-Fiction",
+  },
+  {
+    id: 2,
+    name: "Comédie",
+  },
+];
 
-  const read = (req, res) => {
-    const parsedId = parseInt(req.params.id, 10);
-  
-  
-   
+// Declare the actions
 
-     const parogram = categories.find((p) => p.id ===parsedId);
 
-     if (parogram != null) {
-      res.json(parogram);
+ const browse = async (req, res) => {
+   const categoriesFromDB = await tables.category.readAll();
+ 
+   res.json(categoriesFromDB);
+ };
 
-     } else{
-      res.sendStatuts(404);
-     }
-    };
+const read = (req, res) => {
+  const parsedId = parseInt(req.params.id, 10);
 
-  
+  const category = categories.find((p) => p.id === parsedId);
 
-  module.exports = { browse, read };
+  if (category != null) {
+    res.json(category);
+  } else {
+    res.sendStatus(404);
+  }
+};
+
+// Export them to import them somewhere else
+
+module.exports = { browse, read };
